@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>帶杯咖啡 TAKE A CUP COFFEE | 信義區都會外帶與輕休憩空間</title>
+  
+  <!-- 引入 Google Fonts: Noto Sans TC 與 Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <!-- 引入 Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Inter"', '"Noto Sans TC"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              dark: '#2C3E50',
+              medium: '#3B5266',
+              light: '#F4F6F8',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- 引入 Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    /* 自訂平滑淡入動畫 */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fadeIn {
+      animation: fadeIn 0.25s ease-out forwards;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-white text-slate-800 font-sans antialiased selection:bg-[#2C3E50] selection:text-white">
+
+  <!-- ========================================================================
+       1. 頂部固定導覽列 (Header)
+       ======================================================================== -->
+  <header id="main-header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-white/85 backdrop-blur-sm py-5">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 flex items-center justify-between">
+      <!-- 品牌 Logo 按鈕 -->
+      <button onclick="scrollToSection('hero')" class="flex items-center gap-3 text-left group focus:outline-none" aria-label="回到首頁">
+        <div class="w-10 h-10 rounded-xl bg-[#2C3E50] text-white flex items-center justify-center shadow-sm group-hover:bg-[#3B5266] transition-colors">
+          <i data-lucide="coffee" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <span class="block text-lg font-bold tracking-wider text-[#2C3E50]">帶杯咖啡</span>
+          <span class="block text-[10px] tracking-[0.2em] text-slate-400 font-medium">TAKE A CUP COFFEE</span>
+        </div>
+      </button>
+
+      <!-- 電腦版導覽連結 -->
+      <nav class="hidden md:flex items-center gap-8">
+        <button onclick="scrollToSection('about')" class="text-sm font-medium text-slate-600 hover:text-[#2C3E50] transition-colors py-1 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-[#2C3E50] hover:after:w-full after:transition-all">
+          品牌理念
+        </button>
+        <button onclick="scrollToSection('menu')" class="text-sm font-medium text-slate-600 hover:text-[#2C3E50] transition-colors py-1 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-[#2C3E50] hover:after:w-full after:transition-all">
+          精選菜單
+        </button>
+        <button onclick="scrollToSection('gallery')" class="text-sm font-medium text-slate-600 hover:text-[#2C3E50] transition-colors py-1 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-[#2C3E50] hover:after:w-full after:transition-all">
+          環境寫真
+        </button>
+        <button onclick="scrollToSection('location')" class="text-sm font-medium text-slate-600 hover:text-[#2C3E50] transition-colors py-1 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-[#2C3E50] hover:after:w-full after:transition-all">
+          門市位置
+        </button>
+        <button onclick="scrollToSection('reservation')" class="px-5 py-2.5 rounded-full bg-[#2C3E50] text-white text-sm font-medium hover:bg-[#3B5266] transition-all shadow-sm hover:shadow active:scale-95">
+          立即訂位
+        </button>
+      </nav>
+
+      <!-- 手機版漢堡選單按鈕 -->
+      <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="md:hidden p-2.5 rounded-xl text-slate-700 hover:bg-slate-100 transition-colors focus:outline-none" aria-label="開啟選單">
+        <i id="menu-icon-open" data-lucide="menu" class="w-6 h-6"></i>
+        <i id="menu-icon-close" data-lucide="x" class="w-6 h-6 hidden"></i>
+      </button>
+    </div>
+
+    <!-- 手機版下拉選單 -->
+    <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-slate-200 px-6 pt-3 pb-6 shadow-lg animate-fadeIn">
+      <div class="flex flex-col space-y-2">
+        <button onclick="handleMobileNav('about')" class="w-full text-left py-3 px-4 rounded-xl text-base font-medium text-slate-700 hover:bg-slate-50 hover:text-[#2C3E50] transition-colors flex items-center justify-between">
+          <span>品牌理念</span>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
+        </button>
+        <button onclick="handleMobileNav('menu')" class="w-full text-left py-3 px-4 rounded-xl text-base font-medium text-slate-700 hover:bg-slate-50 hover:text-[#2C3E50] transition-colors flex items-center justify-between">
+          <span>精選菜單</span>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
+        </button>
+        <button onclick="handleMobileNav('gallery')" class="w-full text-left py-3 px-4 rounded-xl text-base font-medium text-slate-700 hover:bg-slate-50 hover:text-[#2C3E50] transition-colors flex items-center justify-between">
+          <span>環境寫真</span>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
+        </button>
+        <button onclick="handleMobileNav('location')" class="w-full text-left py-3 px-4 rounded-xl text-base font-medium text-slate-700 hover:bg-slate-50 hover:text-[#2C3E50] transition-colors flex items-center justify-between">
+          <span>門市位置</span>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
+        </button>
+        <div class="pt-2">
+          <button onclick="handleMobileNav('reservation')" class="w-full py-3.5 rounded-xl bg-[#2C3E50] text-white text-center font-medium shadow-sm active:bg-[#1e2b37]">
+            立即線上訂位
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ========================================================================
+         2. 首頁主視覺 (Hero Section)
+         ======================================================================== -->
+    <section id="hero" class="pt-28 pb-16 md:pt-36 md:pb-24 bg-gradient-to-b from-[#F4F6F8] to-white overflow-hidden">
+      <div class="max-w-6xl mx-auto px-5 sm:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+          
+          <!-- 左側文字介紹區 -->
+          <div class="lg:col-span-6 space-y-6 text-left">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#2C3E50]/10 text-[#2C3E50] text-xs font-semibold tracking-wider">
+              <span class="w-2 h-2 rounded-full bg-[#2C3E50]"></span>
+              信義區都會外帶 ‧ 輕休憩空間
+            </div>
+
+            <h1 class="text-4xl sm:text-5xl lg:text-[3.25rem] font-bold text-[#1E293B] leading-[1.2] tracking-tight">
+              帶杯咖啡
+              <span class="block text-xl sm:text-2xl font-normal text-slate-500 mt-3 leading-relaxed">
+                忙碌日常裡的喘息片刻，<br class="hidden sm:inline" />
+                帶走一杯剛剛好溫度的好咖啡。
+              </span>
+            </h1>
+
+            <p class="text-slate-600 text-base sm:text-lg leading-relaxed max-w-xl">
+              座落於臺北市信義區基隆路一段，我們以極簡、自然且不失質感的設計語彙，為每天奔波的上班族打造一處能快速外帶、也能隨時坐下短暫充電的靜謐角落。
+            </p>
+
+            <!-- 雙行動呼籲按鈕 -->
+            <div class="pt-2 flex flex-wrap items-center gap-4">
+              <button onclick="scrollToSection('menu')" class="px-7 py-3.5 rounded-full bg-[#2C3E50] text-white font-medium text-sm sm:text-base hover:bg-[#3B5266] transition-all shadow-md hover:shadow-lg flex items-center gap-2 active:scale-95">
+                <span>查看菜單</span>
+                <i data-lucide="chevron-right" class="w-4 h-4"></i>
+              </button>
+              <button onclick="scrollToSection('reservation')" class="px-7 py-3.5 rounded-full bg-white text-[#2C3E50] border border-slate-300 font-medium text-sm sm:text-base hover:border-[#2C3E50] hover:bg-slate-50 transition-all active:scale-95">
+                立即訂位
+              </button>
+            </div>
+
+            <!-- 特色標籤 -->
+            <div class="pt-6 border-t border-slate-200/80 grid grid-cols-3 gap-4 max-w-md">
+              <div>
+                <p class="text-sm font-bold text-[#2C3E50]">快速外帶</p>
+                <p class="text-xs text-slate-500 mt-0.5">通勤午休不需久候</p>
+              </div>
+              <div>
+                <p class="text-sm font-bold text-[#2C3E50]">舒適座席</p>
+                <p class="text-xs text-slate-500 mt-0.5">提供短暫休憩充電</p>
+              </div>
+              <div>
+                <p class="text-sm font-bold text-[#2C3E50]">手作輕食</p>
+                <p class="text-xs text-slate-500 mt-0.5">每日新鮮現烤搭配</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 右側主視覺照片區 -->
+          <div class="lg:col-span-6">
+            <div class="relative rounded-3xl overflow-hidden shadow-xl bg-slate-200 aspect-[4/3] sm:aspect-[16/11] lg:aspect-[4/3]">
+              <img
+                src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=85"
+                alt="帶杯咖啡主視覺 - 質感咖啡與自然光影"
+                class="w-full h-full object-cover object-center hover:scale-105 transition-transform duration-700"
+                onerror="this.src='https://placehold.co/800x600/2C3E50/FFFFFF?text=Take+A+Cup+Coffee'"
+              />
+              <!-- 懸浮質感資訊卡 -->
+              <div class="absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-auto bg-white/95 backdrop-blur-md px-5 py-3.5 rounded-2xl shadow-md border border-slate-100">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-full bg-[#F4F6F8] flex items-center justify-center text-[#2C3E50]">
+                    <i data-lucide="map-pin" class="w-4 h-4"></i>
+                  </div>
+                  <div>
+                    <p class="text-xs font-semibold text-[#2C3E50]">信義區基隆路門市</p>
+                    <p class="text-xs text-slate-500">臺北市信義區基隆路一段157號</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         3. 品牌介紹 (About Section)
+         ======================================================================== -->
+    <section id="about" class="py-20 md:py-28 bg-white">
+      <div class="max-w-6xl mx-auto px-5 sm:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          
+          <!-- 左側雙圖拼貼設計 -->
+          <div class="lg:col-span-6 grid grid-cols-2 gap-4 sm:gap-6">
+            <div class="space-y-4 sm:space-y-6">
+              <div class="rounded-2xl overflow-hidden shadow-md aspect-[3/4] bg-slate-100">
+                <img
+                  src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=800&q=80"
+                  alt="帶杯咖啡簡約室內座位區"
+                  class="w-full h-full object-cover"
+                  onerror="this.src='https://placehold.co/600x800/E2E8F0/2C3E50?text=Minimalist+Space'"
+                />
+              </div>
+            </div>
+            <div class="space-y-4 sm:space-y-6 pt-8 sm:pt-12">
+              <div class="rounded-2xl overflow-hidden shadow-md aspect-[3/4] bg-slate-100">
+                <img
+                  src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=800&q=80"
+                  alt="手沖咖啡與拿鐵拉花"
+                  class="w-full h-full object-cover"
+                  onerror="this.src='https://placehold.co/600x800/CBD5E1/2C3E50?text=Craft+Coffee'"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- 右側品牌故事與核心理念 -->
+          <div class="lg:col-span-6 space-y-6">
+            <div>
+              <span class="text-xs font-bold tracking-[0.2em] text-[#3B5266] uppercase">
+                OUR STORY ‧ 品牌理念
+              </span>
+              <h2 class="text-3xl sm:text-4xl font-bold text-[#1E293B] mt-2 leading-snug">
+                在快節奏的都市裡，<br />
+                留一處剛好的空白。
+              </h2>
+            </div>
+
+            <p class="text-slate-600 leading-relaxed text-base">
+              「帶杯咖啡」誕生於對都會日常的觀察。在信義區基隆路一帶，每個人都步履匆匆，我們希望這間店不只是買完就走的外帶窗口，更是一座能讓心靈短暫著陸的微型綠洲。
+            </p>
+            <p class="text-slate-600 leading-relaxed text-base">
+              無論是晨間會議前需要一杯喚醒思緒的美式，或是午後想暫時離開電腦螢幕、配份溫熱輕食放空十五分鐘，這裡永遠為您保留最自然、無拘束的溫度。
+            </p>
+
+            <!-- 三大特色列表 -->
+            <div class="pt-4 space-y-4">
+              <div class="p-4 rounded-2xl bg-[#F4F6F8] border border-slate-200/60 flex items-start gap-4">
+                <div class="w-8 h-8 rounded-full bg-[#2C3E50] text-white flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">01</div>
+                <div>
+                  <h3 class="font-bold text-[#1E293B] text-base">低飽和靜謐美學</h3>
+                  <p class="text-sm text-slate-600 mt-1 leading-relaxed">捨棄繁複裝飾，以沉穩灰藍、純白與自然木質調，消除視覺疲勞。</p>
+                </div>
+              </div>
+
+              <div class="p-4 rounded-2xl bg-[#F4F6F8] border border-slate-200/60 flex items-start gap-4">
+                <div class="w-8 h-8 rounded-full bg-[#2C3E50] text-white flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">02</div>
+                <div>
+                  <h3 class="font-bold text-[#1E293B] text-base">外帶與內用兼具</h3>
+                  <p class="text-sm text-slate-600 mt-1 leading-relaxed">流暢的動線設計讓上班族能快速取餐；同時備有舒適座位，隨時歡迎您坐下喘口氣。</p>
+                </div>
+              </div>
+
+              <div class="p-4 rounded-2xl bg-[#F4F6F8] border border-slate-200/60 flex items-start gap-4">
+                <div class="w-8 h-8 rounded-full bg-[#2C3E50] text-white flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">03</div>
+                <div>
+                  <h3 class="font-bold text-[#1E293B] text-base">純粹風味的堅持</h3>
+                  <p class="text-sm text-slate-600 mt-1 leading-relaxed">從自家配方義式豆到每日現烤輕食，用最真實的食材陪伴您的每個工作日。</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         4. 精選菜單 (Menu Section)
+         ======================================================================== -->
+    <section id="menu" class="py-20 md:py-28 bg-[#F4F6F8]">
+      <div class="max-w-6xl mx-auto px-5 sm:px-8">
+        
+        <!-- 區塊標題 -->
+        <div class="text-center max-w-2xl mx-auto space-y-3">
+          <span class="text-xs font-bold tracking-[0.2em] text-[#3B5266] uppercase">
+            OUR MENU ‧ 精選菜單
+          </span>
+          <h2 class="text-3xl sm:text-4xl font-bold text-[#1E293B]">
+            每日現萃咖啡與手作輕食
+          </h2>
+          <p class="text-slate-600 text-sm sm:text-base">
+            全品項皆提供快速外帶與內用服務，自備環保杯享折扣優惠。
+          </p>
+        </div>
+
+        <!-- 分類切換按鈕列 (由 JS 動態渲染) -->
+        <div id="menu-category-buttons" class="mt-10 flex flex-wrap items-center justify-center gap-2.5 sm:gap-3"></div>
+
+        <!-- 圖示圖例說明 -->
+        <div class="mt-6 flex flex-wrap items-center justify-center gap-5 text-xs text-slate-500">
+          <span class="flex items-center gap-1.5">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-[#2C3E50]"></i> 人氣推薦
+          </span>
+          <span class="flex items-center gap-1.5">
+            <i data-lucide="leaf" class="w-3.5 h-3.5 text-emerald-600"></i> 素食可食
+          </span>
+          <span class="flex items-center gap-1.5">
+            <i data-lucide="flame" class="w-3.5 h-3.5 text-rose-500"></i> 帶有辣度
+          </span>
+        </div>
+
+        <!-- 菜單卡片網格 (由 JS 動態渲染) -->
+        <div id="menu-grid" class="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"></div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         5. 線上訂位 (Reservation Section)
+         ======================================================================== -->
+    <section id="reservation" class="py-20 md:py-28 bg-white">
+      <div class="max-w-5xl mx-auto px-5 sm:px-8">
+        <div class="bg-[#F4F6F8] rounded-3xl p-6 sm:p-10 md:p-12 border border-slate-200/80 shadow-sm">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+            
+            <!-- 左側訂位說明 -->
+            <div class="lg:col-span-5 space-y-5">
+              <span class="text-xs font-bold tracking-[0.2em] text-[#3B5266] uppercase">
+                RESERVATION ‧ 線上訂位
+              </span>
+              <h2 class="text-3xl font-bold text-[#1E293B] leading-snug">
+                為您的午休或小聚，<br />提前保留舒適座位。
+              </h2>
+              <p class="text-slate-600 text-sm leading-relaxed">
+                店內除提供快速外帶吧台外，亦設有少量木質休憩座位。若您預計與同事短暫討論或享用輕食，歡迎提前預約保留席次。
+              </p>
+
+              <div class="pt-2 space-y-3 text-sm text-slate-600">
+                <div class="flex items-center gap-3">
+                  <i data-lucide="clock" class="w-4 h-4 text-[#2C3E50] shrink-0"></i>
+                  <span>座位保留時間為訂位時間起 10 分鐘</span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <i data-lucide="users" class="w-4 h-4 text-[#2C3E50] shrink-0"></i>
+                  <span>單筆線上預約開放 1 至 6 位入座</span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <i data-lucide="map-pin" class="w-4 h-4 text-[#2C3E50] shrink-0"></i>
+                  <span>臺北市信義區基隆路一段157號</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 右側表單或成功結果顯示區 -->
+            <div class="lg:col-span-7 bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200/60">
+              
+              <!-- 訂位輸入表單 -->
+              <form id="reservation-form" novalidate class="space-y-5">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <!-- 姓名 -->
+                  <div>
+                    <label for="res-name" class="block text-sm font-medium text-slate-700 mb-1.5">
+                      訂位姓名 <span class="text-rose-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      id="res-name"
+                      name="name"
+                      placeholder="請輸入姓名（如：陳先生）"
+                      class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:border-[#2C3E50] focus:ring-2 focus:ring-[#2C3E50]/15 transition-all"
+                    />
+                    <p id="error-name" class="hidden mt-1 text-xs text-rose-500 flex items-center gap-1"></p>
+                  </div>
+
+                  <!-- 聯絡電話 -->
+                  <div>
+                    <label for="res-phone" class="block text-sm font-medium text-slate-700 mb-1.5">
+                      聯絡電話 <span class="text-rose-500">*</span>
+                    </label>
+                    <input
+                      type="tel"
+                      id="res-phone"
+                      name="phone"
+                      placeholder="0912-345-678"
+                      class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:border-[#2C3E50] focus:ring-2 focus:ring-[#2C3E50]/15 transition-all"
+                    />
+                    <p id="error-phone" class="hidden mt-1 text-xs text-rose-500 flex items-center gap-1"></p>
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <!-- 訂位日期 -->
+                  <div>
+                    <label for="res-date" class="block text-sm font-medium text-slate-700 mb-1.5">
+                      訂位日期 <span class="text-rose-500">*</span>
+                    </label>
+                    <input
+                      type="date"
+                      id="res-date"
+                      name="date"
+                      class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:border-[#2C3E50] focus:ring-2 focus:ring-[#2C3E50]/15 transition-all"
+                    />
+                    <p id="error-date" class="hidden mt-1 text-xs text-rose-500 flex items-center gap-1"></p>
+                  </div>
+
+                  <!-- 訂位時間 -->
+                  <div>
+                    <label for="res-time" class="block text-sm font-medium text-slate-700 mb-1.5">
+                      訂位時間 <span class="text-rose-500">*</span>
+                    </label>
+                    <select
+                      id="res-time"
+                      name="time"
+                      class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm bg-white focus:outline-none focus:border-[#2C3E50] focus:ring-2 focus:ring-[#2C3E50]/15"
+                    >
+                      <option value="08:30">08:30（晨間時段）</option>
+                      <option value="10:00">10:00</option>
+                      <option value="12:00">12:00（午休時段）</option>
+                      <option value="12:30" selected>12:30（午休時段）</option>
+                      <option value="13:00">13:00</option>
+                      <option value="15:00">15:00（下午茶時段）</option>
+                      <option value="16:30">16:30</option>
+                      <option value="18:00">18:00（下班小憩）</option>
+                    </select>
+                  </div>
+
+                  <!-- 訂位人數 -->
+                  <div>
+                    <label for="res-guests" class="block text-sm font-medium text-slate-700 mb-1.5">
+                      人數 <span class="text-rose-500">*</span>
+                    </label>
+                    <select
+                      id="res-guests"
+                      name="guests"
+                      class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm bg-white focus:outline-none focus:border-[#2C3E50] focus:ring-2 focus:ring-[#2C3E50]/15"
+                    >
+                      <option value="1">1 位</option>
+                      <option value="2" selected>2 位</option>
+                      <option value="3">3 位</option>
+                      <option value="4">4 位</option>
+                      <option value="5">5 位</option>
+                      <option value="6">6 位</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- 備註欄位 -->
+                <div>
+                  <label for="res-note" class="block text-sm font-medium text-slate-700 mb-1.5">
+                    備註需求（選填）
+                  </label>
+                  <input
+                    type="text"
+                    id="res-note"
+                    name="note"
+                    placeholder="例如：需要靠窗插座座位、餐點想先準備..."
+                    class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:border-[#2C3E50] focus:ring-2 focus:ring-[#2C3E50]/15"
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  class="w-full py-3.5 rounded-xl bg-[#2C3E50] text-white font-medium text-sm sm:text-base hover:bg-[#3B5266] transition-all shadow-sm hover:shadow active:scale-[0.99]"
+                >
+                  確認送出訂位
+                </button>
+              </form>
+
+              <!-- 訂位成功確認畫面 (預設隱藏) -->
+              <div id="reservation-success" class="hidden py-4 space-y-6 animate-fadeIn">
+                <div class="flex items-center gap-3 text-emerald-700">
+                  <div class="w-12 h-12 rounded-full bg-emerald-50 flex items-center justify-center shrink-0">
+                    <i data-lucide="check-circle-2" class="w-7 h-7 text-emerald-600"></i>
+                  </div>
+                  <div>
+                    <h3 class="text-xl font-bold text-[#1E293B]">訂位申請已送出！</h3>
+                    <p class="text-sm text-slate-500">
+                      預約編號：<span id="confirm-code" class="font-mono font-semibold text-[#2C3E50]"></span>
+                    </p>
+                  </div>
+                </div>
+
+                <div class="bg-[#F4F6F8] rounded-xl p-5 space-y-3 text-sm border border-slate-200/70">
+                  <div class="flex justify-between py-1 border-b border-slate-200/60">
+                    <span class="text-slate-500">訂位人姓名</span>
+                    <span id="confirm-name" class="font-semibold text-[#1E293B]"></span>
+                  </div>
+                  <div class="flex justify-between py-1 border-b border-slate-200/60">
+                    <span class="text-slate-500">聯絡電話</span>
+                    <span id="confirm-phone" class="font-semibold text-[#1E293B]"></span>
+                  </div>
+                  <div class="flex justify-between py-1 border-b border-slate-200/60">
+                    <span class="text-slate-500">預約日期與時間</span>
+                    <span id="confirm-datetime" class="font-semibold text-[#1E293B]"></span>
+                  </div>
+                  <div class="flex justify-between py-1">
+                    <span class="text-slate-500">預約人數</span>
+                    <span id="confirm-guests" class="font-semibold text-[#1E293B]"></span>
+                  </div>
+                  <div id="confirm-note-container" class="hidden pt-2 border-t border-slate-200/60">
+                    <span class="block text-slate-500 mb-1">備註需求</span>
+                    <p id="confirm-note" class="text-slate-700"></p>
+                  </div>
+                </div>
+
+                <p class="text-xs text-slate-500 leading-relaxed">
+                  ※ 目前為展示版預約系統，實際座位安排將依門市現場為準。期待在帶杯咖啡與您相見！
+                </p>
+
+                <button
+                  onclick="resetReservation()"
+                  class="w-full py-3 rounded-xl border border-[#2C3E50] text-[#2C3E50] font-medium text-sm hover:bg-[#2C3E50] hover:text-white transition-colors"
+                >
+                  修改或新增另一筆訂位
+                </button>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         6. 環境照片展示 (Gallery Section)
+         ======================================================================== -->
+    <section id="gallery" class="py-20 md:py-28 bg-[#F4F6F8]">
+      <div class="max-w-6xl mx-auto px-5 sm:px-8">
+        
+        <!-- 區塊標題 -->
+        <div class="text-center max-w-2xl mx-auto space-y-3">
+          <span class="text-xs font-bold tracking-[0.2em] text-[#3B5266] uppercase">
+            GALLERY ‧ 環境寫真
+          </span>
+          <h2 class="text-3xl sm:text-4xl font-bold text-[#1E293B]">
+            簡約光影與日常風景
+          </h2>
+          <p class="text-slate-600 text-sm sm:text-base">
+            點擊任意照片可放大檢視空間細節與咖啡輕食日常。
+          </p>
+        </div>
+
+        <!-- 圖片網格 (由 JS 動態渲染) -->
+        <div id="gallery-grid" class="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+      </div>
+
+      <!-- 點擊放大檢視燈箱 (Lightbox Modal) -->
+      <div id="lightbox-modal" onclick="closeLightbox()" class="hidden fixed inset-0 z-50 bg-slate-900/85 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 animate-fadeIn">
+        <div onclick="event.stopPropagation()" class="relative max-w-4xl w-full bg-white rounded-3xl overflow-hidden shadow-2xl">
+          <!-- 關閉按鈕 -->
+          <button onclick="closeLightbox()" class="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-black/50 text-white hover:bg-black/75 flex items-center justify-center transition-colors" aria-label="關閉放大圖片">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+
+          <div class="bg-slate-900 max-h-[70vh] flex items-center justify-center overflow-hidden">
+            <img id="lightbox-img" src="" alt="" class="w-full h-auto max-h-[70vh] object-contain" />
+          </div>
+
+          <div class="p-6 bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <span id="lightbox-category" class="text-xs font-semibold text-[#3B5266] tracking-wider"></span>
+              <h3 id="lightbox-title" class="text-xl font-bold text-[#1E293B] mt-1"></h3>
+              <p id="lightbox-desc" class="text-sm text-slate-600 mt-1"></p>
+            </div>
+            <button onclick="closeLightbox()" class="px-5 py-2.5 rounded-xl bg-slate-100 text-slate-700 text-sm font-medium hover:bg-slate-200 transition-colors shrink-0">
+              關閉檢視
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         7. 門市地圖與交通位置 (MapSection)
+         ======================================================================== -->
+    <section id="location" class="py-20 md:py-28 bg-white">
+      <div class="max-w-6xl mx-auto px-5 sm:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+          
+          <!-- 左側交通與門市資訊 -->
+          <div class="lg:col-span-5 space-y-6">
+            <div>
+              <span class="text-xs font-bold tracking-[0.2em] text-[#3B5266] uppercase">
+                LOCATION ‧ 門市位置
+              </span>
+              <h2 class="text-3xl font-bold text-[#1E293B] mt-2">
+                來帶杯咖啡坐坐吧
+              </h2>
+            </div>
+
+            <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+              位於信義區基隆路一段商業辦公圈核心，鄰近捷運市府站與世貿中心，無論上班途中順路外帶或午間散步前來都十分便利。
+            </p>
+
+            <div class="space-y-4 pt-2">
+              <div class="flex items-start gap-3.5">
+                <div class="w-10 h-10 rounded-xl bg-[#F4F6F8] text-[#2C3E50] flex items-center justify-center shrink-0">
+                  <i data-lucide="map-pin" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <h3 class="text-sm font-bold text-[#1E293B]">門市地址</h3>
+                  <p class="text-sm text-slate-600 mt-0.5">臺北市信義區基隆路一段157號</p>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-3.5">
+                <div class="w-10 h-10 rounded-xl bg-[#F4F6F8] text-[#2C3E50] flex items-center justify-center shrink-0">
+                  <i data-lucide="clock" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <h3 class="text-sm font-bold text-[#1E293B]">營業時間</h3>
+                  <p class="text-sm text-slate-500 mt-0.5">待補（平日 / 假日營業時間規劃中）</p>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-3.5">
+                <div class="w-10 h-10 rounded-xl bg-[#F4F6F8] text-[#2C3E50] flex items-center justify-center shrink-0">
+                  <i data-lucide="phone" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <h3 class="text-sm font-bold text-[#1E293B]">聯絡電話</h3>
+                  <p class="text-sm text-slate-500 mt-0.5">待補（門市專線申請中）</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- 開啟 Google Maps 外部連結按鈕 -->
+            <div class="pt-2">
+              <a
+                href="https://www.google.com/maps/search/?api=1&query=臺北市信義區基隆路一段157號"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#2C3E50] text-white text-sm font-medium hover:bg-[#3B5266] transition-all shadow-sm"
+              >
+                <span>在 Google Maps 中開啟</span>
+                <i data-lucide="external-link" class="w-4 h-4"></i>
+              </a>
+            </div>
+          </div>
+
+          <!-- 右側嵌入式 Google Maps 地圖 -->
+          <div class="lg:col-span-7">
+            <div class="w-full h-[340px] sm:h-[420px] rounded-3xl overflow-hidden border border-slate-200 shadow-sm bg-slate-100">
+              <iframe
+                title="帶杯咖啡 Google Maps 位置"
+                src="https://maps.google.com/maps?q=臺北市信義區基隆路一段157號&t=&z=16&ie=UTF8&iwloc=&output=embed"
+                width="100%"
+                height="100%"
+                style="border: 0;"
+                allowfullscreen=""
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+              ></iframe>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ========================================================================
+       8. 頁尾營業資訊與版權宣告 (Footer)
+       ======================================================================== -->
+  <footer class="bg-[#2C3E50] text-slate-300 pt-16 pb-12">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-10 pb-12 border-b border-slate-600/50">
+        
+        <!-- 品牌簡介 -->
+        <div class="md:col-span-5 space-y-4">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-white/10 text-white flex items-center justify-center">
+              <i data-lucide="coffee" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <span class="block text-lg font-bold text-white tracking-wider">帶杯咖啡</span>
+              <span class="block text-[10px] tracking-[0.2em] text-slate-400">TAKE A CUP COFFEE</span>
+            </div>
+          </div>
+          <p class="text-sm text-slate-300/90 leading-relaxed max-w-sm">
+            簡約、休閒、自然，又不失質感。為信義區上班族打造的日常外帶咖啡與短暫休憩空間。
+          </p>
+        </div>
+
+        <!-- 快速導覽 -->
+        <div class="md:col-span-3 space-y-3">
+          <h3 class="text-sm font-bold text-white tracking-wider uppercase">網站導覽</h3>
+          <ul class="space-y-2 text-sm">
+            <li><button onclick="scrollToSection('about')" class="hover:text-white transition-colors">品牌理念</button></li>
+            <li><button onclick="scrollToSection('menu')" class="hover:text-white transition-colors">精選菜單</button></li>
+            <li><button onclick="scrollToSection('reservation')" class="hover:text-white transition-colors">線上訂位</button></li>
+            <li><button onclick="scrollToSection('gallery')" class="hover:text-white transition-colors">環境寫真</button></li>
+          </ul>
+        </div>
+
+        <!-- 營業資訊 (未提供資料標示為待補) -->
+        <div class="md:col-span-4 space-y-3">
+          <h3 class="text-sm font-bold text-white tracking-wider uppercase">營業與聯絡資訊</h3>
+          <ul class="space-y-2.5 text-sm">
+            <li class="flex items-start gap-2.5">
+              <i data-lucide="map-pin" class="w-4 h-4 text-slate-400 shrink-0 mt-1"></i>
+              <span>地址：臺北市信義區基隆路一段157號</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <i data-lucide="clock" class="w-4 h-4 text-slate-400 shrink-0 mt-1"></i>
+              <span>營業時間：待補（平日 / 假日營業時間規劃中）</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <i data-lucide="phone" class="w-4 h-4 text-slate-400 shrink-0 mt-1"></i>
+              <span>聯絡電話：待補（門市專線申請中）</span>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- 底部版權宣告 -->
+      <div class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
+        <p>© <span id="current-year"></span> 帶杯咖啡 Take A Cup Coffee. All rights reserved.</p>
+        <p>臺北市信義區基隆路一段157號</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========================================================================
+       9. 互動邏輯腳本 (JavaScript)
+       ======================================================================== -->
+  <script>
+    // --- 資料陣列：精選菜單 (12 品項) ---
+    const MENU_ITEMS = [
+      // 分類一：咖啡
+      {
+        id: 'coffee-1',
+        category: '咖啡',
+        name: '帶杯經典美式',
+        price: 95,
+        description: '嚴選中深焙衣索比亞與巴西配方豆，帶有堅果與黑巧克力尾韻，順口提神，最適合早晨外帶。',
+        image: 'https://images.unsplash.com/photo-1551030173-122aabc4489c?auto=format&fit=crop&w=800&q=80',
+        isPopular: true,
+        isVegetarian: true,
+        isSpicy: false,
+      },
+      {
+        id: 'coffee-2',
+        category: '咖啡',
+        name: '絲絨海鹽拿鐵',
+        price: 135,
+        description: '綿密鮮奶泡覆蓋濃縮咖啡，頂層輕灑法國鹽之花，微鹹襯托出牛乳的天然甘甜。',
+        image: 'https://images.unsplash.com/photo-1572442388796-11668a67e53d?auto=format&fit=crop&w=800&q=80',
+        isPopular: true,
+        isVegetarian: true,
+        isSpicy: false,
+      },
+      {
+        id: 'coffee-3',
+        category: '咖啡',
+        name: '西西里青檸冷萃',
+        price: 140,
+        description: '16小時低溫慢萃咖啡融合屏東新鮮現榨檸檬汁，酸甜清爽，午後解膩首選。',
+        image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&w=800&q=80',
+        isPopular: false,
+        isVegetarian: true,
+        isSpicy: false,
+      },
+      {
+        id: 'coffee-4',
+        category: '咖啡',
+        name: '燕麥奶黑糖卡布',
+        price: 145,
+        description: '使用植物性燕麥奶與手工炒製黑糖炙燒，香氣濃郁且無乳糖負擔，純素者也能安心享用。',
+        image: 'https://images.unsplash.com/photo-1534778101976-62847782c213?auto=format&fit=crop&w=800&q=80',
+        isPopular: false,
+        isVegetarian: true,
+        isSpicy: false,
+      },
+
+      // 分類二：其他飲品
+      {
+        id: 'drink-1',
+        category: '其他飲品',
+        name: '靜岡抹茶鮮乳',
+        price: 140,
+        description: '日本靜岡手刷抹茶粉搭配濃醇鮮乳，茶韻清香回甘，呈現自然柔和的翠綠色澤。',
+        image: 'https://images.unsplash.com/photo-1515823064-d6e0c04616a7?auto=format&fit=crop&w=800&q=80',
+        isPopular: true,
+        isVegetarian: true,
+        isSpicy: false,
+      },
+      {
+        id: 'drink-2',
+        category: '其他飲品',
+        name: '白桃烏龍氣泡飲',
+        price: 130,
+        description: '台灣高山冷泡烏龍茶注入細緻氣泡與白桃果露，口感輕盈沁涼，帶來愉悅好心情。',
+        image: 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=800&q=80',
+        isPopular: false,
+        isVegetarian: true,
+        isSpicy: false,
+      },
+      {
+        id: 'drink-3',
+        category: '其他飲品',
+        name: '焙茶燕麥歐蕾',
+        price: 135,
+        description: '低咖啡因京都炭焙茶粉與香醇燕麥奶交織，溫潤順口，適合下午不想攝取過多咖啡因的你。',
+        image: 'https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&w=800&q=80',
+        isPopular: false,
+        isVegetarian: true,
+        isSpicy: false,
+      },
+      {
+        id: 'drink-4',
+        category: '其他飲品',
+        name: '70% 厄瓜多爾純可可',
+        price: 145,
+        description: '嚴選單一產區黑巧克力融化於熱鮮奶中，苦甜平衡、香氣深邃，是雨天最溫暖的陪伴。',
+        image: 'https://images.unsplash.com/photo-1542990253-0d0f5be5f0ed?auto=format&fit=crop&w=800&q=80',
+        isPopular: false,
+        isVegetarian: true,
+        isSpicy: false,
+      },
+
+      // 分類三：輕食
+      {
+        id: 'food-1',
+        category: '輕食',
+        name: '法式奶油可頌',
+        price: 85,
+        description: '使用法國發酵奶油折疊烘焙，外層金黃酥脆、內裡蜂巢組織柔軟，散發純粹麥香。',
+        image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=800&q=80',
+        isPopular: true,
+        isVegetarian: true,
+        isSpicy: false,
+      },
+      {
+        id: 'food-2',
+        category: '輕食',
+        name: '墨西哥辣味燻雞巧巴達',
+        price: 165,
+        description: '外脆內Q的義式拖鞋麵包，夾入舒肥嫩燻雞、切達起司與墨西哥辣椒片，微辣開胃。',
+        image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=800&q=80',
+        isPopular: true,
+        isVegetarian: false,
+        isSpicy: true,
+      },
+      {
+        id: 'food-3',
+        category: '輕食',
+        name: '酪梨水波蛋酸種吐司',
+        price: 185,
+        description: '天然酵母酸種麵包抹上新鮮酪梨泥，搭配半熟水波蛋與芝麻葉，營養均衡無負擔。',
+        image: 'https://images.unsplash.com/photo-1525351484163-7529414342d8?auto=format&fit=crop&w=800&q=80',
+        isPopular: false,
+        isVegetarian: true,
+        isSpicy: false,
+      },
+      {
+        id: 'food-4',
+        category: '輕食',
+        name: '海鹽焦糖肉桂捲',
+        price: 110,
+        description: '錫蘭肉桂粉與黑糖層層捲入鬆軟麵團，出爐後淋上微鹹焦糖醬，搭配黑咖啡堪稱絕配。',
+        image: 'https://images.unsplash.com/photo-1509365465985-25d11c17e812?auto=format&fit=crop&w=800&q=80',
+        isPopular: false,
+        isVegetarian: true,
+        isSpicy: false,
+      },
+    ];
+
+    // --- 資料陣列：環境照片 ---
+    const GALLERY_IMAGES = [
+      {
+        id: 'gal-1',
+        title: '簡約低飽和木質吧台',
+        category: '空間設計',
+        description: '以冷靜的灰藍色調搭配溫潤原木，讓進門的瞬間自然放慢呼吸。',
+        url: 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=1000&q=80',
+      },
+      {
+        id: 'gal-2',
+        title: '午間自然光窗邊座位',
+        category: '休憩角落',
+        description: '保留充足留白與插座配置，適合上班族短暫休憩或處理隨身工作。',
+        url: 'https://images.unsplash.com/photo-1497935586351-b67a49e012bf?auto=format&fit=crop&w=1000&q=80',
+      },
+      {
+        id: 'gal-3',
+        title: '每日新鮮手作輕食烘焙',
+        category: '手作輕食',
+        description: '早晨現烤出爐的可頌與酸種麵包，為忙碌的一天補充純粹能量。',
+        url: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=1000&q=80',
+      },
+      {
+        id: 'gal-4',
+        title: '職人手沖與義式萃取',
+        category: '咖啡工藝',
+        description: '精準控溫與研磨，確保每一杯外帶咖啡都擁有穩定而乾淨的風味。',
+        url: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1000&q=80',
+      },
+      {
+        id: 'gal-5',
+        title: '外帶專屬極簡杯裝設計',
+        category: '外帶美學',
+        description: '專為信義區通勤族設計的防漏隔熱杯身，拿在手中也是一種日常質感。',
+        url: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=1000&q=80',
+      },
+      {
+        id: 'gal-6',
+        title: '靜謐午後的閱讀與小憩',
+        category: '空間氛圍',
+        description: '不喧嘩的背景音樂與柔和照明，提供片刻抽離繁忙辦公桌的喘息空間。',
+        url: 'https://images.unsplash.com/photo-1521017432531-fbd92d768814?auto=format&fit=crop&w=1000&q=80',
+      },
+    ];
+
+    let currentCategory = '全部品項';
+    let isMobileMenuOpen = false;
+
+    // 1. 平滑滾動導覽
+    function scrollToSection(sectionId) {
+      const element = document.getElementById(sectionId);
+      if (element) {
+        const headerOffset = 80;
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth',
+        });
+      }
+    }
+
+    // 2. 手機版選單控制
+    function toggleMobileMenu() {
+      isMobileMenuOpen = !isMobileMenuOpen;
+      const menu = document.getElementById('mobile-menu');
+      const iconOpen = document.getElementById('menu-icon-open');
+      const iconClose = document.getElementById('menu-icon-close');
+
+      if (isMobileMenuOpen) {
+        menu.classList.remove('hidden');
+        iconOpen.classList.add('hidden');
+        iconClose.classList.remove('hidden');
+      } else {
+        menu.classList.add('hidden');
+        iconOpen.classList.remove('hidden');
+        iconClose.classList.add('hidden');
+      }
+    }
+
+    function handleMobileNav(sectionId) {
+      if (isMobileMenuOpen) toggleMobileMenu();
+      scrollToSection(sectionId);
+    }
+
+    // 3. 監聽滾動調整 Header 樣式
+    window.addEventListener('scroll', () => {
+      const header = document.getElementById('main-header');
+      if (window.scrollY > 20) {
+        header.classList.add('bg-white/95', 'backdrop-blur-md', 'shadow-sm', 'py-3', 'border-b', 'border-slate-200/70');
+        header.classList.remove('bg-white/85', 'py-5');
+      } else {
+        header.classList.remove('bg-white/95', 'backdrop-blur-md', 'shadow-sm', 'py-3', 'border-b', 'border-slate-200/70');
+        header.classList.add('bg-white/85', 'py-5');
+      }
+    });
+
+    // 4. 渲染菜單分類按鈕與卡片
+    function renderMenu() {
+      const categories = ['全部品項', '咖啡', '其他飲品', '輕食'];
+      const btnContainer = document.getElementById('menu-category-buttons');
+      const gridContainer = document.getElementById('menu-grid');
+
+      // 渲染分類按鈕
+      btnContainer.innerHTML = categories.map(cat => {
+        const isActive = currentCategory === cat;
+        const btnClass = isActive
+          ? 'bg-[#2C3E50] text-white shadow-sm'
+          : 'bg-white text-slate-600 border border-slate-200 hover:border-[#2C3E50] hover:text-[#2C3E50]';
+        return `<button onclick="selectCategory('${cat}')" class="px-5 py-2.5 rounded-full text-sm font-medium transition-all ${btnClass}">${cat}</button>`;
+      }).join('');
+
+      // 篩選品項
+      const filtered = currentCategory === '全部品項'
+        ? MENU_ITEMS
+        : MENU_ITEMS.filter(item => item.category === currentCategory);
+
+      // 渲染卡片
+      gridContainer.innerHTML = filtered.map(item => `
+        <div class="group bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 flex flex-col h-full animate-fadeIn">
+          <div class="relative aspect-[16/10] bg-slate-100 overflow-hidden">
+            <img
+              src="${item.image}"
+              alt="${item.name}"
+              class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+              onerror="this.src='https://placehold.co/600x400/E2E8F0/2C3E50?text=${encodeURIComponent(item.name)}'"
+            />
+            ${item.isPopular ? `
+              <div class="absolute top-3 left-3 px-3 py-1 rounded-full bg-[#2C3E50]/95 text-white text-xs font-medium flex items-center gap-1 shadow-sm backdrop-blur-sm">
+                <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-300"></i>
+                <span>人氣推薦</span>
+              </div>
+            ` : ''}
+            <div class="absolute top-3 right-3 flex items-center gap-1.5">
+              ${item.isVegetarian ? `
+                <span title="素食可食" class="w-7 h-7 rounded-full bg-white/95 text-emerald-700 flex items-center justify-center shadow-sm backdrop-blur-sm">
+                  <i data-lucide="leaf" class="w-4 h-4"></i>
+                </span>
+              ` : ''}
+              ${item.isSpicy ? `
+                <span title="微辣風味" class="w-7 h-7 rounded-full bg-white/95 text-rose-600 flex items-center justify-center shadow-sm backdrop-blur-sm">
+                  <i data-lucide="flame" class="w-4 h-4"></i>
+                </span>
+              ` : ''}
+            </div>
+          </div>
+
+          <div class="p-5 sm:p-6 flex flex-col flex-grow justify-between">
+            <div>
+              <div class="flex items-start justify-between gap-3">
+                <h3 class="text-lg font-bold text-[#1E293B] group-hover:text-[#2C3E50] transition-colors">${item.name}</h3>
+                <span class="text-lg font-bold text-[#2C3E50] shrink-0">NT$ ${item.price}</span>
+              </div>
+              <span class="inline-block mt-1 text-xs font-medium text-slate-400">${item.category}</span>
+              <p class="mt-3 text-sm text-slate-600 leading-relaxed">${item.description}</p>
+            </div>
+
+            <div class="mt-5 pt-3 border-t border-slate-100 flex items-center gap-3 text-xs text-slate-500">
+              ${item.isVegetarian ? `<span class="inline-flex items-center gap-1 text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md"><i data-lucide="leaf" class="w-3 h-3"></i> 素食可</span>` : ''}
+              ${item.isSpicy ? `<span class="inline-flex items-center gap-1 text-rose-600 bg-rose-50 px-2 py-0.5 rounded-md"><i data-lucide="flame" class="w-3 h-3"></i> 微辣</span>` : ''}
+              ${!item.isVegetarian && !item.isSpicy ? `<span class="text-slate-400">現點現做 ‧ 推薦搭配</span>` : ''}
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      lucide.createIcons();
+    }
+
+    function selectCategory(category) {
+      currentCategory = category;
+      renderMenu();
+    }
+
+    // 5. 渲染環境寫真與燈箱控制
+    function renderGallery() {
+      const grid = document.getElementById('gallery-grid');
+      grid.innerHTML = GALLERY_IMAGES.map((photo, index) => `
+        <button
+          onclick="openLightbox(${index})"
+          class="group relative rounded-2xl overflow-hidden bg-slate-200 aspect-[4/3] text-left shadow-sm hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-[#2C3E50]"
+        >
+          <img
+            src="${photo.url}"
+            alt="${photo.title}"
+            class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+            onerror="this.src='https://placehold.co/800x600/CBD5E1/2C3E50?text=${encodeURIComponent(photo.title)}'"
+          />
+          <div class="absolute inset-0 bg-gradient-to-t from-[#1E293B]/80 via-[#1E293B]/20 to-transparent opacity-85 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5">
+            <div class="flex items-center justify-between text-white">
+              <div>
+                <span class="text-[11px] uppercase tracking-wider text-slate-300 block">${photo.category}</span>
+                <h3 class="text-base font-bold mt-0.5">${photo.title}</h3>
+              </div>
+              <div class="w-9 h-9 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                <i data-lucide="zoom-in" class="w-4 h-4 text-white"></i>
+              </div>
+            </div>
+          </div>
+        </button>
+      `).join('');
+      lucide.createIcons();
+    }
+
+    function openLightbox(index) {
+      const photo = GALLERY_IMAGES[index];
+      document.getElementById('lightbox-img').src = photo.url;
+      document.getElementById('lightbox-img').alt = photo.title;
+      document.getElementById('lightbox-category').textContent = photo.category;
+      document.getElementById('lightbox-title').textContent = photo.title;
+      document.getElementById('lightbox-desc').textContent = photo.description;
+      document.getElementById('lightbox-modal').classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      document.getElementById('lightbox-modal').classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+
+    // 6. 線上訂位表單驗證與送出
+    function initReservationForm() {
+      const dateInput = document.getElementById('res-date');
+      const todayStr = new Date().toISOString().split('T')[0];
+      dateInput.setAttribute('min', todayStr);
+
+      const form = document.getElementById('reservation-form');
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const name = document.getElementById('res-name').value.trim();
+        const phone = document.getElementById('res-phone').value.trim();
+        const date = document.getElementById('res-date').value;
+        const time = document.getElementById('res-time').value;
+        const guests = document.getElementById('res-guests').value;
+        const note = document.getElementById('res-note').value.trim();
+
+        let isValid = true;
+
+        // 驗證姓名
+        const errName = document.getElementById('error-name');
+        const inputName = document.getElementById('res-name');
+        if (!name) {
+          errName.innerHTML = `<i data-lucide="alert-circle" class="w-3.5 h-3.5"></i> 請輸入您的姓名或稱呼`;
+          errName.classList.remove('hidden');
+          inputName.classList.add('border-rose-400');
+          isValid = false;
+        } else {
+          errName.classList.add('hidden');
+          inputName.classList.remove('border-rose-400');
+        }
+
+        // 驗證電話
+        const errPhone = document.getElementById('error-phone');
+        const inputPhone = document.getElementById('res-phone');
+        if (!phone) {
+          errPhone.innerHTML = `<i data-lucide="alert-circle" class="w-3.5 h-3.5"></i> 請輸入聯絡電話以便保留座位`;
+          errPhone.classList.remove('hidden');
+          inputPhone.classList.add('border-rose-400');
+          isValid = false;
+        } else if (!/^[0-9\-+\s]{8,15}$/.test(phone)) {
+          errPhone.innerHTML = `<i data-lucide="alert-circle" class="w-3.5 h-3.5"></i> 請輸入有效的電話號碼格式（例如：0912-345-678）`;
+          errPhone.classList.remove('hidden');
+          inputPhone.classList.add('border-rose-400');
+          isValid = false;
+        } else {
+          errPhone.classList.add('hidden');
+          inputPhone.classList.remove('border-rose-400');
+        }
+
+        // 驗證日期
+        const errDate = document.getElementById('error-date');
+        const inputDate = document.getElementById('res-date');
+        if (!date) {
+          errDate.innerHTML = `<i data-lucide="alert-circle" class="w-3.5 h-3.5"></i> 請選擇訂位日期`;
+          errDate.classList.remove('hidden');
+          inputDate.classList.add('border-rose-400');
+          isValid = false;
+        } else {
+          errDate.classList.add('hidden');
+          inputDate.classList.remove('border-rose-400');
+        }
+
+        lucide.createIcons();
+
+        if (!isValid) return;
+
+        // 顯示成功結果
+        const bookingCode = `TAC-${Math.floor(1000 + Math.random() * 9000)}`;
+        document.getElementById('confirm-code').textContent = bookingCode;
+        document.getElementById('confirm-name').textContent = name;
+        document.getElementById('confirm-phone').textContent = phone;
+        document.getElementById('confirm-datetime').textContent = `${date}   ${time}`;
+        document.getElementById('confirm-guests').textContent = `${guests} 位`;
+
+        const noteContainer = document.getElementById('confirm-note-container');
+        if (note) {
+          document.getElementById('confirm-note').textContent = note;
+          noteContainer.classList.remove('hidden');
+        } else {
+          noteContainer.classList.add('hidden');
+        }
+
+        form.classList.add('hidden');
+        document.getElementById('reservation-success').classList.remove('hidden');
+        lucide.createIcons();
+      });
+    }
+
+    function resetReservation() {
+      const form = document.getElementById('reservation-form');
+      form.reset();
+      document.getElementById('reservation-success').classList.add('hidden');
+      form.classList.remove('hidden');
+    }
+
+    // 7. 頁面載入初始化
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('current-year').textContent = new Date().getFullYear();
+      renderMenu();
+      renderGallery();
+      initReservationForm();
+      lucide.createIcons();
+    });
+  </script>
+</body>
+</html>
